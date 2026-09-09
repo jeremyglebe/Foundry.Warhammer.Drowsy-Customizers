@@ -13927,8 +13927,11 @@ function gO(e) {
 	let t = TO(e.results).flatMap((e) => {
 		let t = bO(e);
 		return t ? [t] : [];
-	});
-	return t.length > 0 ? { rows: t } : void 0;
+	}), n = e.formula;
+	return t.length > 0 ? {
+		rows: t,
+		...typeof n == "string" ? { sourceFormula: n } : {}
+	} : void 0;
 }
 function _O(e, t, n) {
 	let r = t ? [
@@ -14233,7 +14236,7 @@ function ek({ fallbackJournalUuid: e = ZO, flagScope: t, speciesItemBridge: n, s
 			},
 			[t]: { [XO]: i }
 		},
-		formula: `1d${r.rows.length}`,
+		formula: r.sourceFormula ?? `1d${r.rows.length}`,
 		img: "systems/wfrp4e/ui/buttons/d10.webp",
 		name: r.name,
 		replacement: !0,
@@ -14242,9 +14245,9 @@ function ek({ fallbackJournalUuid: e = ZO, flagScope: t, speciesItemBridge: n, s
 			drawn: !1,
 			img: "icons/svg/d20-grey.svg",
 			name: t.name,
-			range: [n + 1, n + 1],
+			range: t.sourceRange ? [...t.sourceRange] : [n + 1, n + 1],
 			type: "text",
-			weight: 1
+			weight: t.sourceWeight ?? 1
 		}))
 	}, o = a.flags;
 	return o[t][XO] = {
@@ -14269,7 +14272,7 @@ function ik(e) {
 	return e.careerTable?.rows.length ? [{
 		column: YD(e),
 		name: `Career - ${e.name}`,
-		rows: e.careerTable.rows,
+		...e.careerTable,
 		speciesKey: e.key
 	}] : [];
 }
@@ -14300,7 +14303,7 @@ function ck(e, t) {
 	return t.flatMap((t) => t.careerTable?.rows.length ? [{
 		column: XD(e, t),
 		name: `Career - ${e.name} / ${t.name}`,
-		rows: t.careerTable.rows,
+		...t.careerTable,
 		speciesKey: e.key,
 		subspeciesKey: t.key
 	}] : []);
