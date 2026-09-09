@@ -2,7 +2,7 @@
   "id": "wfrp4e-customizer-apps",
   "title": "Drowsy's WFRP4e Customizers",
   "description": "Vue-powered customization applications for the WFRP4e Foundry system.",
-  "version": "1.10.10",
+  "version": "1.11.0",
   "authors": [
     {
       "name": "Jeremy Glebe"
@@ -66,7 +66,17 @@
       ]
     }
   ],
-  "url": "https://github.com/jeremyglebe/Foundry.Warhammer.Drowsy-Customizers",
-  "manifest": "https://github.com/jeremyglebe/Foundry.Warhammer.Drowsy-Customizers/releases/latest/download/module.json",
-  "download": "https://github.com/jeremyglebe/Foundry.Warhammer.Drowsy-Customizers/releases/download/v1.10.10/module.zip"
+  "documentTypes": {
+    "Item": {
+      "species": {
+        "htmlFields": [
+          "description.value",
+          "gmdescription.value"
+        ]
+      }
+    }
+  },
+  "url": "https://github.com/jeremyglebe/FoundryVTT-WFRP-Customization-Apps",
+  "manifest": "https://github.com/jeremyglebe/FoundryVTT-WFRP-Customization-Apps/releases/latest/download/module.json",
+  "download": "https://github.com/jeremyglebe/FoundryVTT-WFRP-Customization-Apps/releases/download/v1.11.0/module.zip"
 }
