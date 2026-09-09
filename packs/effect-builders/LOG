@@ -1,0 +1,5 @@
+2026/09/09-15:35:01.473655 16e5df000 Delete type=3 #1
+2026/09/09-15:35:01.474179 16fe8f000 Level-0 table #5: started
+2026/09/09-15:35:01.474324 16fe8f000 Level-0 table #5: 560 bytes OK
+2026/09/09-15:35:01.474407 16fe8f000 Delete type=0 #3
+2026/09/09-15:35:01.474463 16fe8f000 Manual compaction at level-0 from '!macros!EffBuilder000001' @ 72057594037927935 : 1 .. '!macros!EffBuilder000005' @ 0 : 0; will stop at (end)
