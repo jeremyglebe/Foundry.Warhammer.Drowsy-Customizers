@@ -1,0 +1,5 @@
+2026/09/10-20:55:03.721040 16f4db000 Delete type=3 #1
+2026/09/10-20:55:03.723296 16fd73000 Level-0 table #5: started
+2026/09/10-20:55:03.723458 16fd73000 Level-0 table #5: 434 bytes OK
+2026/09/10-20:55:03.723555 16fd73000 Delete type=0 #3
+2026/09/10-20:55:03.723648 16fd73000 Manual compaction at level-0 from '!macros!SpeciesTableEdit' @ 72057594037927935 : 1 .. '!macros!SpeciesTableEdit' @ 0 : 0; will stop at (end)
