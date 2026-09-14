@@ -18468,6 +18468,7 @@ function AL() {
 //#endregion
 //#region src/module/api/register-module-api.ts
 function jL() {
+	if (!game) throw Error("Foundry game global is unavailable during module API registration.");
 	let e = game.modules.get(Y);
 	if (!e) throw Error(`Foundry module registry entry was not found for ${Y}.`);
 	e.api = AL();

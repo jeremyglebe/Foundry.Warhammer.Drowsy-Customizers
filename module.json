@@ -2,7 +2,7 @@
   "id": "wfrp4e-customizer-apps",
   "title": "Drowsy's WFRP4e Customizers",
   "description": "Vue-powered customization applications for the WFRP4e Foundry system.",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "authors": [
     {
       "name": "Jeremy Glebe"
@@ -33,67 +33,6 @@
       "path": "lang/en.json"
     }
   ],
-  "packs": [
-    {
-      "name": "customizer-macros",
-      "label": "Customizer Macros",
-      "type": "Macro",
-      "path": "packs/customizer-macros"
-    },
-    {
-      "name": "sample-species",
-      "label": "Sample Species",
-      "type": "Item",
-      "system": "wfrp4e",
-      "path": "packs/sample-species"
-    },
-    {
-      "name": "sample-species-tables",
-      "label": "Sample Species Tables",
-      "type": "RollTable",
-      "system": "wfrp4e",
-      "path": "packs/sample-species-tables"
-    },
-    {
-      "name": "sample-species-traits",
-      "label": "Sample Species Traits",
-      "type": "Item",
-      "system": "wfrp4e",
-      "path": "packs/sample-species-traits"
-    },
-    {
-      "name": "sample-species-talents",
-      "label": "Sample Species Talents",
-      "type": "Item",
-      "system": "wfrp4e",
-      "path": "packs/sample-species-talents"
-    },
-    {
-      "name": "sample-species-journals",
-      "label": "Sample Species Journals",
-      "type": "JournalEntry",
-      "path": "packs/sample-species-journals"
-    },
-    {
-      "name": "effect-builders",
-      "label": "Effect Builders",
-      "type": "Macro",
-      "path": "packs/effect-builders"
-    }
-  ],
-  "packFolders": [
-    {
-      "name": "Drowsy's WFRP4e Customizers - Sample Species",
-      "sorting": "a",
-      "packs": [
-        "sample-species",
-        "sample-species-tables",
-        "sample-species-traits",
-        "sample-species-talents",
-        "sample-species-journals"
-      ]
-    }
-  ],
   "documentTypes": {
     "Item": {
       "species": {
@@ -104,7 +43,70 @@
       }
     }
   },
+  "packs": [
+    {
+      "name": "customizer-macros",
+      "type": "Macro",
+      "label": "Customizer Macros",
+      "path": "packs/customizer-macros"
+    },
+    {
+      "name": "effect-builders",
+      "type": "Macro",
+      "label": "Effect Builders",
+      "path": "packs/effect-builders"
+    },
+    {
+      "name": "sample-species",
+      "type": "Item",
+      "system": "wfrp4e",
+      "label": "Sample Species",
+      "path": "packs/sample-species"
+    },
+    {
+      "name": "sample-species-journals",
+      "type": "JournalEntry",
+      "label": "Sample Species Journals",
+      "path": "packs/sample-species-journals"
+    },
+    {
+      "name": "sample-species-tables",
+      "type": "RollTable",
+      "system": "wfrp4e",
+      "label": "Sample Species Tables",
+      "path": "packs/sample-species-tables"
+    },
+    {
+      "name": "sample-species-talents",
+      "type": "Item",
+      "system": "wfrp4e",
+      "label": "Sample Species Talents",
+      "path": "packs/sample-species-talents"
+    },
+    {
+      "name": "sample-species-traits",
+      "type": "Item",
+      "system": "wfrp4e",
+      "label": "Sample Species Traits",
+      "path": "packs/sample-species-traits"
+    }
+  ],
+  "packFolders": [
+    {
+      "name": "Drowsy's WFRP4e Customizers",
+      "sorting": "a",
+      "packs": [
+        "customizer-macros",
+        "effect-builders",
+        "sample-species",
+        "sample-species-journals",
+        "sample-species-tables",
+        "sample-species-talents",
+        "sample-species-traits"
+      ]
+    }
+  ],
   "url": "https://github.com/jeremyglebe/Foundry.Warhammer.Drowsy-Customizers",
   "manifest": "https://github.com/jeremyglebe/Foundry.Warhammer.Drowsy-Customizers/releases/latest/download/module.json",
-  "download": "https://github.com/jeremyglebe/Foundry.Warhammer.Drowsy-Customizers/releases/download/v2.2.0/module.zip"
+  "download": "https://github.com/jeremyglebe/Foundry.Warhammer.Drowsy-Customizers/releases/download/v2.3.0/module.zip"
 }
