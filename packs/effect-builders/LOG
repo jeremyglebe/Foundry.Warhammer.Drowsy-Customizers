@@ -1,5 +1,5 @@
-2026/10/02-00:18:12.367953 172827000 Delete type=3 #1
-2026/10/02-00:18:12.368408 1740d7000 Level-0 table #5: started
-2026/10/02-00:18:12.368543 1740d7000 Level-0 table #5: 594 bytes OK
-2026/10/02-00:18:12.368625 1740d7000 Delete type=0 #3
-2026/10/02-00:18:12.368672 1740d7000 Manual compaction at level-0 from '!macros!EffBuilder000001' @ 72057594037927935 : 1 .. '!macros!EffBuilder000005' @ 0 : 0; will stop at (end)
+2026/10/02-11:28:28.678562 17336b000 Delete type=3 #1
+2026/10/02-11:28:28.679180 173c03000 Level-0 table #5: started
+2026/10/02-11:28:28.679344 173c03000 Level-0 table #5: 594 bytes OK
+2026/10/02-11:28:28.679411 173c03000 Delete type=0 #3
+2026/10/02-11:28:28.679461 173c03000 Manual compaction at level-0 from '!macros!EffBuilder000001' @ 72057594037927935 : 1 .. '!macros!EffBuilder000005' @ 0 : 0; will stop at (end)
