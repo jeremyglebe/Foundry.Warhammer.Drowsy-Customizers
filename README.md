@@ -16,7 +16,7 @@ return a not-found response even though this repository already exists.
 ## Compatibility
 
 - Package ID: `wfrp4e-customizer-apps`
-- Current version: `3.0.1`
+- Current version: `3.0.2`
 - Foundry VTT: minimum 13, verified 14
 - Required systems: wfrp4e
 

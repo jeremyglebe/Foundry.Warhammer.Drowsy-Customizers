@@ -566,17 +566,37 @@ function Oe() {
 	};
 }
 //#endregion
-//#region src/module/wfrp/species-builder/runtime-species/career-table.ts
+//#region src/module/functions/species-builder/table-column-candidates.ts
 function ke(e, t, n) {
-	let r = je(e, t, typeof n == "string" ? n.trim() : "");
+	let r = typeof n == "string" ? n.trim() : "", i = t ? [
+		r,
+		`${e}-${t}`,
+		e
+	] : [e];
+	return e === "human" && i.push("human-reiklander"), [...new Set(i.filter(Boolean))];
+}
+//#endregion
+//#region src/module/wfrp/species-builder/career-table-column.ts
+function Ae(e, t) {
+	return !p(e) || !Array.isArray(e.columns) ? e : e.columns.find((e) => je(e) === t);
+}
+function je(e) {
+	if (!p(e) || typeof e.getFlag != "function") return "";
+	let t = e.getFlag.call(e, "wfrp4e", "column");
+	return typeof t == "string" ? t : "";
+}
+//#endregion
+//#region src/module/wfrp/species-builder/runtime-species/career-table.ts
+function Me(e, t, n) {
+	let r = ke(e, t, n);
 	for (let e of r) {
 		let t = game.wfrp4e?.tables?.findTable?.("career", e);
 		if (!t) continue;
-		let n = Me(t, e);
-		if (n) return Ae(n);
+		let n = Ae(t, e);
+		if (n) return Ne(n);
 	}
 }
-function Ae(e) {
+function Ne(e) {
 	if (!p(e)) return;
 	let t = ze(e.results).flatMap((e) => {
 		let t = Pe(e);
@@ -586,22 +606,6 @@ function Ae(e) {
 		rows: t,
 		...typeof n == "string" ? { sourceFormula: n } : {}
 	} : void 0;
-}
-function je(e, t, n) {
-	let r = t ? [
-		n,
-		`${e}-${t}`,
-		e
-	] : [e];
-	return e === "human" && r.push("human-reiklander"), [...new Set(r.filter(Boolean))];
-}
-function Me(e, t) {
-	return !p(e) || !Array.isArray(e.columns) ? e : e.columns.find((e) => Ne(e) === t);
-}
-function Ne(e) {
-	if (!p(e) || typeof e.getFlag != "function") return "";
-	let t = e.getFlag.call(e, "wfrp4e", "column");
-	return typeof t == "string" ? t : "";
 }
 function Pe(e) {
 	if (!p(e)) return;
@@ -661,7 +665,7 @@ async function Ve(e) {
 	let r = e.system.tables.career, i = r.uuid.startsWith("Compendium.") ? Be(r, game.tables?.contents ?? []) ?? await fromUuid(r.uuid) : He(r);
 	if (r.uuid.startsWith("Compendium.") && (!p(i) || i.documentName !== "RollTable")) throw Error(`${e.name}: the referenced Career RollTable could not be resolved.`);
 	if (i) {
-		let n = Ae(i);
+		let n = Ne(i);
 		if (!n) throw Error(`${e.name}: the referenced Career table has no usable rows.`);
 		t.careerTable = n;
 	}
@@ -12688,43 +12692,28 @@ async function ET() {
 	}
 }
 function DT(e) {
-	if (e.type !== "skill") return;
-	kT(e);
-	let t = Xd(e.name);
-	if (!t) return;
-	let n = $d(t.baseName), r = vT.get(n) ?? /* @__PURE__ */ new Set();
-	r.add(t.specialization), vT.set(n, r);
+	e.type === "skill" && (AT(e.name, h(e.system, ["characteristic", "value"])), kT(e.name));
 }
 function OT(e) {
-	if (e.type !== "skill" || !e.name) return;
-	AT(e);
-	let t = Xd(e.name);
+	e.type !== "skill" || !e.name || (AT(e.name, h(e, [
+		"system",
+		"characteristic",
+		"value"
+	])), kT(e.name));
+}
+function kT(e) {
+	let t = Xd(e);
 	if (!t) return;
 	let n = $d(t.baseName), r = vT.get(n) ?? /* @__PURE__ */ new Set();
 	r.add(t.specialization), vT.set(n, r);
 }
-function kT(e) {
-	let t = h(e.system, ["characteristic", "value"]);
+function AT(e, t) {
 	if (!ee(t)) return;
 	let n = {
 		characteristicKey: t,
 		characteristicName: C[t],
-		skillName: e.name
-	}, r = $d(e.name), i = $d(Xd(e.name)?.baseName ?? e.name);
-	yT.set(r, n), bT.has(i) || bT.set(i, n);
-}
-function AT(e) {
-	let t = h(e, [
-		"system",
-		"characteristic",
-		"value"
-	]);
-	if (!ee(t) || !e.name) return;
-	let n = {
-		characteristicKey: t,
-		characteristicName: C[t],
-		skillName: e.name
-	}, r = $d(e.name), i = $d(Xd(e.name)?.baseName ?? e.name);
+		skillName: e
+	}, r = $d(e), i = $d(Xd(e)?.baseName ?? e);
 	yT.set(r, n), bT.has(i) || bT.set(i, n);
 }
 function jT(e) {
@@ -15638,7 +15627,7 @@ function Wj() {
 async function Gj(e, t = []) {
 	let n = lj(Uj ?? cj(void 0), cj(game.wfrp4e?.config), new Set(e.map((e) => e.trim()).filter(Boolean)));
 	for (let e of t) delete n.records.species[e];
-	Nj(n, { resolveCareerTable: ke });
+	Nj(n, { resolveCareerTable: Me });
 }
 //#endregion
 //#region src/module/apps/species-item/state/index.ts
@@ -18016,36 +18005,38 @@ function sI() {
 	});
 }
 //#endregion
-//#region src/module/functions/species-builder/career-table-normalization.ts
+//#region src/module/functions/species-builder/normalization-strings.ts
 function cI(e) {
-	if (!p(e)) return;
-	let t = lI(e.rows) ?? uI(e.careers);
-	return t ? { rows: t } : void 0;
+	if (typeof e == "string") return e.trim() || void 0;
 }
 function lI(e) {
 	if (!Array.isArray(e)) return;
 	let t = e.flatMap((e) => {
-		if (!p(e)) return [];
-		let t = fI(e.name);
-		if (!t) return [];
-		let n = { name: t };
-		return k(n, "journalUuid", fI(e.journalUuid)), [n];
-	});
-	return t.length > 0 ? t : void 0;
-}
-function uI(e) {
-	return dI(e)?.map((e) => ({ name: e }));
-}
-function dI(e) {
-	if (!Array.isArray(e)) return;
-	let t = e.flatMap((e) => {
-		let t = fI(e);
+		let t = cI(e);
 		return t ? [t] : [];
 	});
 	return t.length > 0 ? t : void 0;
 }
+//#endregion
+//#region src/module/functions/species-builder/career-table-normalization.ts
+function uI(e) {
+	if (!p(e)) return;
+	let t = dI(e.rows) ?? fI(e.careers);
+	return t ? { rows: t } : void 0;
+}
+function dI(e) {
+	if (!Array.isArray(e)) return;
+	let t = e.flatMap((e) => {
+		if (!p(e)) return [];
+		let t = cI(e.name);
+		if (!t) return [];
+		let n = { name: t };
+		return k(n, "journalUuid", cI(e.journalUuid)), [n];
+	});
+	return t.length > 0 ? t : void 0;
+}
 function fI(e) {
-	if (typeof e == "string") return e.trim() || void 0;
+	return lI(e)?.map((e) => ({ name: e }));
 }
 //#endregion
 //#region src/module/functions/species-builder/replacement-row-normalization.ts
@@ -18077,9 +18068,9 @@ function mI(e) {
 	return t.length > 0 ? t : void 0;
 }
 function hI(e, t) {
-	if (typeof e == "string") return { name: vI(e) ?? "" };
+	if (typeof e == "string") return { name: cI(e) ?? "" };
 	if (!p(e)) return { name: "" };
-	let n = gI(e.item, t), r = vI(e.name) ?? n?.name ?? "";
+	let n = gI(e.item, t), r = cI(e.name) ?? n?.name ?? "";
 	return n ? {
 		item: n,
 		name: r
@@ -18087,26 +18078,23 @@ function hI(e, t) {
 }
 function gI(e, t) {
 	if (!p(e)) return;
-	let n = vI(e.name), r = _I(e.type), i = vI(e.uuid);
+	let n = cI(e.name), r = _I(e.type), i = cI(e.uuid);
 	if (!n || r !== t || !i) return;
 	let a = {
 		name: n,
 		type: r,
 		uuid: i
-	}, o = vI(e.specification) ?? vI(e.specifier);
+	}, o = cI(e.specification) ?? cI(e.specifier);
 	o && (a.specification = o);
-	let s = vI(e.img);
+	let s = cI(e.img);
 	return s && (a.img = s), a;
 }
 function _I(e) {
 	return e === "career" || e === "skill" || e === "talent" || e === "trait" ? e : void 0;
 }
-function vI(e) {
-	if (typeof e == "string") return e.trim() || void 0;
-}
 //#endregion
 //#region src/module/functions/species-builder/linked-grant-normalization.ts
-function yI(e, t) {
+function vI(e, t) {
 	if (!Array.isArray(e)) return;
 	let n = e.flatMap((e) => {
 		let n = hI(e, t);
@@ -18114,7 +18102,7 @@ function yI(e, t) {
 	});
 	return n.length > 0 ? n : void 0;
 }
-function bI(e) {
+function yI(e) {
 	if (!Array.isArray(e)) return;
 	let t = e.flatMap((e) => {
 		if (!p(e) || !Array.isArray(e.choices)) return [];
@@ -18128,75 +18116,64 @@ function bI(e) {
 }
 //#endregion
 //#region src/module/functions/species-builder/config-keys.ts
-function xI(e) {
+function bI(e) {
 	return e.trim().toLocaleLowerCase().replaceAll(/[^\da-z]+/g, "-").replaceAll(/^-+|-+$/g, "");
 }
 //#endregion
 //#region src/module/functions/species-builder/settings-normalization/values.ts
-var SI = Object.values(S);
+var xI = Object.values(S);
+function SI(e) {
+	return typeof e == "string" ? bI(e) : "";
+}
 function CI(e) {
-	return typeof e == "string" ? xI(e) : "";
-}
-function wI(e) {
-	if (typeof e == "string") return e.trim() || void 0;
-}
-function TI(e) {
 	let t = Number(e);
 	return Number.isFinite(t) ? t : void 0;
 }
-function EI(e) {
-	if (!Array.isArray(e)) return;
-	let t = e.flatMap((e) => {
-		let t = wI(e);
-		return t ? [t] : [];
+function wI(e) {
+	if (!p(e)) return;
+	let t = Object.entries(e).flatMap(([e, t]) => {
+		let n = cI(e), r = cI(t);
+		return n && r ? [[n, r]] : [];
 	});
-	return t.length > 0 ? t : void 0;
+	return t.length > 0 ? Object.fromEntries(t) : void 0;
+}
+function TI(e) {
+	if (!p(e)) return;
+	let t = Object.entries(e).flatMap(([e, t]) => {
+		let n = cI(e), r = CI(t);
+		return n && r !== void 0 ? [[n, r]] : [];
+	});
+	return t.length > 0 ? Object.fromEntries(t) : void 0;
+}
+function EI(e) {
+	if (!p(e)) return;
+	let t = Object.entries(e).flatMap(([e, t]) => {
+		let n = cI(e), r = lI(t);
+		return n && r ? [[n, r]] : [];
+	});
+	return t.length > 0 ? Object.fromEntries(t) : void 0;
 }
 function DI(e) {
 	if (!p(e)) return;
-	let t = Object.entries(e).flatMap(([e, t]) => {
-		let n = wI(e), r = wI(t);
-		return n && r ? [[n, r]] : [];
+	let t = xI.flatMap((t) => {
+		let n = cI(e[t]);
+		return n ? [[t, n]] : [];
 	});
 	return t.length > 0 ? Object.fromEntries(t) : void 0;
 }
 function OI(e) {
 	if (!p(e)) return;
-	let t = Object.entries(e).flatMap(([e, t]) => {
-		let n = wI(e), r = TI(t);
-		return n && r !== void 0 ? [[n, r]] : [];
-	});
-	return t.length > 0 ? Object.fromEntries(t) : void 0;
+	let t = {};
+	return k(t, "die", cI(e.die)), k(t, "feet", CI(e.feet)), k(t, "inches", CI(e.inches)), Object.keys(t).length > 0 ? t : void 0;
 }
 function kI(e) {
 	if (!p(e)) return;
-	let t = Object.entries(e).flatMap(([e, t]) => {
-		let n = wI(e), r = EI(t);
-		return n && r ? [[n, r]] : [];
-	});
-	return t.length > 0 ? Object.fromEntries(t) : void 0;
-}
-function AI(e) {
-	if (!p(e)) return;
-	let t = SI.flatMap((t) => {
-		let n = wI(e[t]);
-		return n ? [[t, n]] : [];
-	});
-	return t.length > 0 ? Object.fromEntries(t) : void 0;
-}
-function jI(e) {
-	if (!p(e)) return;
-	let t = {};
-	return k(t, "die", wI(e.die)), k(t, "feet", TI(e.feet)), k(t, "inches", TI(e.inches)), Object.keys(t).length > 0 ? t : void 0;
-}
-function MI(e) {
-	if (!p(e)) return;
-	let t = wI(e.formula);
+	let t = cI(e.formula);
 	return t ? { formula: t } : void 0;
 }
 //#endregion
 //#region src/module/functions/species-builder/species-settings-normalization.ts
-function NI(e) {
+function AI(e) {
 	return !p(e) || !Array.isArray(e.definitions) ? {
 		autoRegisterSpeciesTable: !1,
 		correctExistingWfrpSpecies: !1,
@@ -18206,15 +18183,15 @@ function NI(e) {
 	} : {
 		autoRegisterSpeciesTable: e.autoRegisterSpeciesTable === !0,
 		correctExistingWfrpSpecies: e.correctExistingWfrpSpecies === !0,
-		definitions: e.definitions.flatMap(FI),
-		runtimeSpeciesExtensions: PI(e.runtimeSpeciesExtensions),
+		definitions: e.definitions.flatMap(MI),
+		runtimeSpeciesExtensions: jI(e.runtimeSpeciesExtensions),
 		showGeneratedConfigTab: e.showGeneratedConfigTab === !0
 	};
 }
-function PI(e) {
+function jI(e) {
 	return Array.isArray(e) ? e.flatMap((e) => {
 		if (!p(e)) return [];
-		let t = wI(e.speciesKey), n = wI(e.speciesName), r = II(e.subspecies) ?? [];
+		let t = cI(e.speciesKey), n = cI(e.speciesName), r = NI(e.subspecies) ?? [];
 		return t && n && r.length > 0 ? [{
 			speciesKey: t,
 			speciesName: n,
@@ -18222,96 +18199,96 @@ function PI(e) {
 		}] : [];
 	}) : [];
 }
-function FI(e) {
-	return RI(e, (e, t, n) => ({
+function MI(e) {
+	return FI(e, (e, t, n) => ({
 		includeInExtraSpecies: n.includeInExtraSpecies === !0,
 		key: e,
 		name: t
-	})).map((t) => (zI(t, e), BI(t, e), t));
+	})).map((t) => (II(t, e), LI(t, e), t));
 }
-function II(e) {
+function NI(e) {
 	if (!Array.isArray(e)) return;
-	let t = e.flatMap(LI);
+	let t = e.flatMap(PI);
 	return t.length > 0 ? t : void 0;
 }
-function LI(e) {
-	return RI(e, (e, t, n) => {
+function PI(e) {
+	return FI(e, (e, t, n) => {
 		let r = {
 			key: e,
 			name: t
 		};
-		return k(r, "skillsAdded", EI(n.skillsAdded)), k(r, "skillsRemoved", EI(n.skillsRemoved)), k(r, "talentsAdded", EI(n.talentsAdded)), k(r, "talentsRemoved", EI(n.talentsRemoved)), k(r, "traitsAdded", EI(n.traitsAdded)), k(r, "traitsRemoved", EI(n.traitsRemoved)), r;
+		return k(r, "skillsAdded", lI(n.skillsAdded)), k(r, "skillsRemoved", lI(n.skillsRemoved)), k(r, "talentsAdded", lI(n.talentsAdded)), k(r, "talentsRemoved", lI(n.talentsRemoved)), k(r, "traitsAdded", lI(n.traitsAdded)), k(r, "traitsRemoved", lI(n.traitsRemoved)), r;
 	});
 }
-function RI(e, t) {
+function FI(e, t) {
 	if (!p(e)) return [];
-	let n = CI(e.key), r = wI(e.name);
+	let n = SI(e.key), r = cI(e.name);
 	if (!n || !r) return [];
 	let i = t(n, r, e);
-	return k(i, "characteristics", AI(e.characteristics)), k(i, "randomTalents", OI(e.randomTalents)), k(i, "talentReplacementRows", pI(e.talentReplacementRows)), k(i, "talentReplacements", DI(e.talentReplacements)), k(i, "movement", TI(e.movement)), k(i, "fate", TI(e.fate)), k(i, "resilience", TI(e.resilience)), k(i, "extra", TI(e.extra)), k(i, "woundFormula", MI(e.woundFormula)), k(i, "careerTable", cI(e.careerTable)), [i];
+	return k(i, "characteristics", DI(e.characteristics)), k(i, "randomTalents", TI(e.randomTalents)), k(i, "talentReplacementRows", pI(e.talentReplacementRows)), k(i, "talentReplacements", wI(e.talentReplacements)), k(i, "movement", CI(e.movement)), k(i, "fate", CI(e.fate)), k(i, "resilience", CI(e.resilience)), k(i, "extra", CI(e.extra)), k(i, "woundFormula", kI(e.woundFormula)), k(i, "careerTable", uI(e.careerTable)), [i];
 }
-function zI(e, t) {
-	p(t) && (k(e, "skills", EI(t.skills)), k(e, "linkedSkills", yI(t.linkedSkills, "skill")), k(e, "talents", EI(t.talents)), k(e, "linkedTalents", bI(t.linkedTalents)), k(e, "traits", EI(t.traits)), k(e, "linkedTraits", yI(t.linkedTraits, "trait")));
+function II(e, t) {
+	p(t) && (k(e, "skills", lI(t.skills)), k(e, "linkedSkills", vI(t.linkedSkills, "skill")), k(e, "talents", lI(t.talents)), k(e, "linkedTalents", yI(t.linkedTalents)), k(e, "traits", lI(t.traits)), k(e, "linkedTraits", vI(t.linkedTraits, "trait")));
 }
-function BI(e, t) {
-	p(t) && (k(e, "age", wI(t.age)), k(e, "height", jI(t.height)), k(e, "careerReplacements", kI(t.careerReplacements)), k(e, "careerReplacementRows", mI(t.careerReplacementRows)), k(e, "subspecies", II(t.subspecies)));
+function LI(e, t) {
+	p(t) && (k(e, "age", cI(t.age)), k(e, "height", OI(t.height)), k(e, "careerReplacements", EI(t.careerReplacements)), k(e, "careerReplacementRows", mI(t.careerReplacementRows)), k(e, "subspecies", NI(t.subspecies)));
 }
 //#endregion
 //#region src/module/wfrp/species-builder/settings.ts
-var VI = LE({
+var RI = LE({
 	defaultValue: Oe(),
 	key: "speciesBuilderSettings",
 	name: "Species Builder Settings",
-	normalize: NI
+	normalize: AI
 });
-function HI() {
-	RE(VI);
+function zI() {
+	RE(RI);
 }
 //#endregion
 //#region src/module/foundry/register-module-settings.ts
-function UI() {
-	HE(), HI(), pr();
+function BI() {
+	HE(), zI(), pr();
 }
 //#endregion
 //#region src/module/wfrp/item-effect-drops.ts
-var WI = new Set(["talent", "trait"]), GI = /* @__PURE__ */ new WeakSet(), KI = !1, qI = "wfrp4e-customizer-grant-builder-button", JI = [
+var VI = new Set(["talent", "trait"]), HI = /* @__PURE__ */ new WeakSet(), UI = !1, WI = "wfrp4e-customizer-grant-builder-button", GI = [
 	"section[data-application-part=\"effects\"].active",
 	"section[data-tab=\"effects\"].active",
 	".tab[data-tab=\"effects\"].active",
 	".tab.effects.active"
-].join(","), YI = [
+].join(","), KI = [
 	"section[data-application-part=\"effects\"]",
 	"section[data-tab=\"effects\"]",
 	".tab[data-tab=\"effects\"]",
 	".tab.effects"
 ].join(",");
-function XI() {
-	KI || (KI = !0, Hooks.on("renderApplicationV2", (e, t) => {
+function qI() {
+	UI || (UI = !0, Hooks.on("renderApplicationV2", (e, t) => {
 		if (!(t instanceof HTMLElement)) return;
-		let n = eL(e);
-		!n || !WI.has(n.type) || (ZI(n, t), QI(n, t));
+		let n = ZI(e);
+		!n || !VI.has(n.type) || (JI(n, t), YI(n, t));
 	}));
 }
-function ZI(e, t) {
-	GI.has(t) || (GI.add(t), t.addEventListener("dragover", (e) => {
-		tL(t, e.target) && (e.preventDefault(), e.dataTransfer && (e.dataTransfer.dropEffect = "copy"));
+function JI(e, t) {
+	HI.has(t) || (HI.add(t), t.addEventListener("dragover", (e) => {
+		QI(t, e.target) && (e.preventDefault(), e.dataTransfer && (e.dataTransfer.dropEffect = "copy"));
 	}, !0), t.addEventListener("drop", (n) => {
-		$I(e, t, n);
+		XI(e, t, n);
 	}, !0));
 }
-function QI(e, t) {
-	if (t.querySelector(`.${qI}`)) return;
-	let n = rL(t, { includeInactive: !0 });
+function YI(e, t) {
+	if (t.querySelector(`.${WI}`)) return;
+	let n = eL(t, { includeInactive: !0 });
 	if (!n) return;
 	let r = document.createElement("div");
 	r.classList.add("wfrp4e-customizer-grant-builder-toolbar");
 	let i = document.createElement("button");
-	i.type = "button", i.classList.add(qI), i.title = "Open Effect Builders for this Item", i.innerHTML = "<i class=\"fa-solid fa-sitemap\" aria-hidden=\"true\"></i><span>Effect Builders</span>", i.addEventListener("click", () => {
+	i.type = "button", i.classList.add(WI), i.title = "Open Effect Builders for this Item", i.innerHTML = "<i class=\"fa-solid fa-sitemap\" aria-hidden=\"true\"></i><span>Effect Builders</span>", i.addEventListener("click", () => {
 		uP(e.uuid);
 	}), r.append(i), n.prepend(r);
 }
-async function $I(t, n, r) {
-	if (!tL(n, r.target)) return;
+async function XI(t, n, r) {
+	if (!QI(n, r.target)) return;
 	let i = HM(r);
 	if (i) {
 		r.preventDefault(), r.stopPropagation();
@@ -18331,25 +18308,25 @@ async function $I(t, n, r) {
 		}
 	}
 }
-function eL(e) {
+function ZI(e) {
 	if (typeof e != "object" || !e) return null;
 	let t = "item" in e ? e.item : void 0;
 	if (fn(t)) return t;
 	let n = "document" in e ? e.document : void 0;
 	return fn(n) ? n : null;
 }
-function tL(e, t) {
-	return !(t instanceof Element) || !e.contains(t) ? !1 : !!nL(e);
+function QI(e, t) {
+	return !(t instanceof Element) || !e.contains(t) ? !1 : !!$I(e);
 }
-function nL(e) {
-	return e.querySelector(JI) || rL(e, { includeInactive: !1 });
+function $I(e) {
+	return e.querySelector(GI) || eL(e, { includeInactive: !1 });
 }
-function rL(e, t) {
-	return [...e.querySelectorAll(YI)].find((e) => t.includeInactive || e.offsetParent !== null) ?? null;
+function eL(e, t) {
+	return [...e.querySelectorAll(KI)].find((e) => t.includeInactive || e.offsetParent !== null) ?? null;
 }
 //#endregion
 //#region src/module/foundry/api/create-module-api.ts
-function iL() {
+function tL() {
 	return {
 		estimateNpcXp: SA,
 		listNpcAutoAdvanceStrategies: eh,
@@ -18374,26 +18351,26 @@ function iL() {
 }
 //#endregion
 //#region src/module/foundry/api/register-module-api.ts
-function aL() {
+function nL() {
 	if (!game) throw Error("Foundry game global is unavailable during module API registration.");
 	let t = game.modules.get(e);
 	if (!t) throw Error(`Foundry module registry entry was not found for ${e}.`);
-	t.api = iL();
+	t.api = tL();
 }
 //#endregion
 //#region src/module/init/register-hooks.ts
-function oL() {
+function rL() {
 	Hooks.once("init", () => {
-		Kr(`${e} | Initializing`), UI(), game.system.id === "wfrp4e" && (Wj(), rF(), nF(), Gr(), iA(), OA(), qe() || (QA(), Sr()), XI()), sI(), Ck();
+		Kr(`${e} | Initializing`), BI(), game.system.id === "wfrp4e" && (Wj(), rF(), nF(), Gr(), iA(), OA(), qe() || (QA(), Sr()), qI()), sI(), Ck();
 	}), Hooks.once("setup", i), Hooks.once("ready", () => {
 		if (game.system.id !== "wfrp4e") {
 			qr(`${e} | Loaded outside ${n}; skipping module API registration.`);
 			return;
 		}
-		return sL();
+		return iL();
 	});
 }
-async function sL() {
+async function iL() {
 	await Promise.resolve();
 	try {
 		await Je(), await Gj([]);
@@ -18407,13 +18384,13 @@ async function sL() {
 		let n = t instanceof Error ? t.message : String(t);
 		qr(`${e} | Compendium tidy failed: ${n}`), ui.notifications?.error(`Compendium folders could not be restored: ${n}`);
 	}
-	aL(), mr(), sT().catch(() => {
+	nL(), mr(), sT().catch(() => {
 		ui.notifications?.error("Career indexing failed. Adding a Career will retry the index.");
 	}), TT(), Kr(`${e} | Ready`);
 }
 //#endregion
 //#region src/module/init/index.ts
-oL();
+rL();
 //#endregion
 
 //# sourceMappingURL=wfrp4e-customizer-apps.mjs.map
