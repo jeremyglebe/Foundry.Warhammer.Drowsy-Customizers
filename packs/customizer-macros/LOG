@@ -1,5 +1,5 @@
-2026/10/02-11:41:40.194643 172717000 Delete type=3 #1
-2026/10/02-11:41:40.195053 1737bb000 Level-0 table #5: started
-2026/10/02-11:41:40.195184 1737bb000 Level-0 table #5: 450 bytes OK
-2026/10/02-11:41:40.195261 1737bb000 Delete type=0 #3
-2026/10/02-11:41:40.195311 1737bb000 Manual compaction at level-0 from '!macros!SpeciesTableEdit' @ 72057594037927935 : 1 .. '!macros!SpeciesTableEdit' @ 0 : 0; will stop at (end)
+2026/10/02-14:20:05.360356 171c0f000 Delete type=3 #1
+2026/10/02-14:20:05.360946 1724a7000 Level-0 table #5: started
+2026/10/02-14:20:05.361130 1724a7000 Level-0 table #5: 450 bytes OK
+2026/10/02-14:20:05.361232 1724a7000 Delete type=0 #3
+2026/10/02-14:20:05.361290 1724a7000 Manual compaction at level-0 from '!macros!SpeciesTableEdit' @ 72057594037927935 : 1 .. '!macros!SpeciesTableEdit' @ 0 : 0; will stop at (end)

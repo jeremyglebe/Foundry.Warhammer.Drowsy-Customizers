@@ -7,7 +7,7 @@ Vue-powered customization applications for the WFRP4e Foundry system.
 In Foundry VTT, open **Add-on Modules**, choose **Install Module**, and paste this manifest URL:
 
 ```text
-https://github.com/jeremyglebe/Foundry.Warhammer.Drowsy-Customizers/releases/latest/download/module.json
+https://github.com/jeremyglebe/FoundryVTT-WFRP-Customization-Apps/releases/latest/download/module.json
 ```
 
 The manifest URL becomes available after the first GitHub release is published. Before then, it may
@@ -16,15 +16,15 @@ return a not-found response even though this repository already exists.
 ## Compatibility
 
 - Package ID: `wfrp4e-customizer-apps`
-- Current version: `3.0.2`
+- Current version: `3.0.3`
 - Foundry VTT: minimum 13, verified 14
 - Required systems: wfrp4e
 
 ## Links
 
-- [Latest release](https://github.com/jeremyglebe/Foundry.Warhammer.Drowsy-Customizers/releases/latest)
-- [Foundry manifest](https://github.com/jeremyglebe/Foundry.Warhammer.Drowsy-Customizers/releases/latest/download/module.json)
-- [Public artifact repository](https://github.com/jeremyglebe/Foundry.Warhammer.Drowsy-Customizers)
+- [Latest release](https://github.com/jeremyglebe/FoundryVTT-WFRP-Customization-Apps/releases/latest)
+- [Foundry manifest](https://github.com/jeremyglebe/FoundryVTT-WFRP-Customization-Apps/releases/latest/download/module.json)
+- [Public artifact repository](https://github.com/jeremyglebe/FoundryVTT-WFRP-Customization-Apps)
 
 ## Repository Contents
 
